@@ -1,0 +1,67 @@
+>>> from django.contrib.auth.models import User
+>>> from News.models import *
+
+>>> user1 = User.objects.create_user('user1')    
+>>> user2 = User.objects.create_user('user2') 
+
+>>> author1 = Author.objects.create(user = user1)
+>>> author2 = Author.objects.create(user = user2) 
+
+>>> category1 = Category.objects.create(name = 'TE')   
+>>> category2 = Category.objects.create(name = 'PO') 
+>>> category3 = Category.objects.create(name = 'SP') 
+>>> category4 = Category.objects.create(name = 'CU') 
+
+>>> post1 = Post.objects.create(author = author1, post_type = 'AR', header = 'header', text = 'text')
+>>> post1.category.add(category1) 
+>>> post1.category.add(category2) 
+>>> post1.category.add(category3) 
+
+>>> post2 = Post.objects.create(author = author2, post_type = 'AR', header = 'header', text = 'text') 
+>>> post2.category.add(category1)
+>>> post2.category.add(category4) 
+>>> post2.category.add(category3)
+
+>>> post3 = Post.objects.create(author = author2, post_type = 'NE', header = 'header', text = 'text') 
+>>> post3.category.add(category2)                                                                     
+>>> post3.category.add(category3) 
+>>> post3.category.add(category4) 
+
+>>> comment1 = Comment.objects.create(post = post1, user = user1, text = '1')
+>>> comment2 = Comment.objects.create(post = post1, user = user2, text = '2') 
+>>> comment3 = Comment.objects.create(post = post2, user = user1, text = '1') 
+>>> comment4 = Comment.objects.create(post = post2, user = user2, text = '2') 
+
+>>> post1.like()
+>>> post1.like()
+>>> post2.dislike()
+>>> post3.like()
+
+>>> comment1.like()
+>>> comment2.dislike()
+>>> comment3.dislike() 
+>>> comment4.like()    
+
+>>> author1.update_rating() 
+>>> author2.update_rating() 
+
+>>> Author.objects.all().order_by('-rating').values('user__username', 'rating')[0]
+
+>>> Post.objects.all().order_by('-rating').values('data', 'author__user__username', 'rating', 'header')[0] 
+>>> post = Post.objects.order_by('-rating').first()      
+>>> post.preview()
+
+>>> best = Post.objects.order_by('-rating').first().id 
+>>> Comment.objects.filter(post_id = best).values('time', 'user__username', 'comment_rating', 'text') 
+
+
+
+
+
+
+
+
+
+
+
+
